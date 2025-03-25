@@ -2,5 +2,5 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 fn main() {
-    qr_mate_lib::run()
+    qr_mate_oss_lib::run()
 }
