@@ -1,0 +1,13 @@
+html {
+    user-select: none;
+    overflow: hidden;
+}
+
+body {
+    margin: 0;
+    cursor: default;
+}
+
+button {
+    cursor: pointer;
+}
