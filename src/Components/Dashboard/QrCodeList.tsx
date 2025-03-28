@@ -7,6 +7,8 @@ import { Options } from "qr-code-styling"
 import ErrorDialog, { ErrorDialogRecord } from "./Dialog/ErrorDialog.tsx"
 import QrCodeExportDialog from "./Dialog/QrCodeExportDialog.tsx"
 import QrCodeData from "../../Types/QrCodeData.ts"
+import { pictureDir } from "@tauri-apps/api/path"
+import { open } from "@tauri-apps/plugin-dialog"
 
 // @ts-ignore
 const highlightNewLineRenderer = (handsontable: Handsontable, td, row, col, prop, value, cellProperties): void => {
@@ -88,6 +90,7 @@ const QrCodeList = (props: QrCodeListProps) => {
     const [isQrCodeExportDialogShow, setIsQrCodeExportDialogShow] = useState<boolean>(false)
     const [errors, setErrors] = useState<ErrorDialogRecord[]>([])
     const [qrCodeData, setQrCodeData] = useState<QrCodeData[]>([])
+    const [directory, setDirectory] = useState<string>("")
 
     const handsontableRef = useRef<HTMLDivElement>(null)
 
@@ -181,10 +184,8 @@ const QrCodeList = (props: QrCodeListProps) => {
                 outsideClickDeselects: true,
                 rowHeaderWidth: 50,
                 // @ts-ignore
-                rowHeaders: (index: number): string => {
-                    return (index + 1).toLocaleString()
-                },
-                renderAllRows: true,
+                rowHeaders: true,
+                renderAllRows: false,
                 search: false,
                 trimRows: true,
                 trimWhitespace: true,
@@ -293,17 +294,35 @@ const QrCodeList = (props: QrCodeListProps) => {
         setQrCodeData(qrCodeData)
         if (errors.length > 0) {
             setIsErrorDialogShow(true)
-        } else {
-            setIsQrCodeExportDialogShow(true)
+        } else if (qrCodeData.length > 0) {
+            pictureDir()
+                .then((directory: string): void => {
+                    open({
+                        directory: true,
+                        defaultPath: directory,
+                    })
+                        .then((directory: string | null): void => {
+                            if (!directory) {
+                                return
+                            }
+                            setDirectory(directory)
+                            if (qrCodeData.length > 0) {
+                                setIsQrCodeExportDialogShow(true)
+                            }
+                        })
+                })
         }
     }
 
     return <>
-        <div ref={handsontableRef} style={{
-            width: "100vw",
-            height: `calc(100vh - 48px)`,
-            margin: "5px"
-        }}>
+        <div ref={handsontableRef}
+             style={{
+                 width: "100vw",
+                 height: `calc(100vh - 50px)`,
+                 margin: "5px",
+                 overflowY: "auto"
+             }}
+        >
         </div>
 
         {/* 画面右下に固定配置 */}
@@ -335,6 +354,7 @@ const QrCodeList = (props: QrCodeListProps) => {
             setIsShow={setIsQrCodeExportDialogShow}
             qrCodeData={qrCodeData}
             options={options}
+            directory={directory}
         />
 
         {/* エラー表示ダイアログ */}

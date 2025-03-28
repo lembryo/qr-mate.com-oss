@@ -1,8 +1,11 @@
+import { pictureDir } from "@tauri-apps/api/path"
+import { open } from "@tauri-apps/plugin-dialog"
 import { CSSProperties, Dispatch, FC, ReactElement, SetStateAction, useState } from "react"
 import { Accordion, Button, Modal } from "react-bootstrap"
-import { Options } from "qr-code-styling"
 
 import QrCodeData from "../../../Types/QrCodeData.ts"
+import QrCodeExportDialog from "./QrCodeExportDialog.tsx"
+import { Options } from "qr-code-styling"
 
 export type ErrorDialogRecord = {
     text: string
@@ -25,10 +28,18 @@ type ErrorDialogProps = {
  */
 const ErrorDialog: FC<ErrorDialogProps> = (props: ErrorDialogProps): ReactElement => {
 
-    const { isShow, setShow, errors } = props
+    const {
+        isShow,
+        setShow,
+        errors,
+        qrCodeData,
+        options
+    } = props
 
     // 「折りたたむ or 全部見る」トグル
-    const [showAll, setShowAll] = useState(false)
+    const [showAll, setShowAll] = useState<boolean>(false)
+    const [isQrCodeExportDialogShow, setIsQrCodeExportDialogShow] = useState<boolean>(false)
+    const [directory, setDirectory] = useState<string>("")
 
     // エラーが無ければダイアログ自体を出さない
     if (!errors || errors.length === 0) {
@@ -43,6 +54,26 @@ const ErrorDialog: FC<ErrorDialogProps> = (props: ErrorDialogProps): ReactElemen
 
     const close = (): void => {
         setShow(false)
+    }
+
+    const save = (): void => {
+        pictureDir()
+            .then((directory: string): void => {
+                open({
+                    directory: true,
+                    defaultPath: directory,
+                })
+                    .then((directory: string | null): void => {
+                        if (!directory) {
+                            return
+                        }
+                        setDirectory(directory)
+                        if (qrCodeData.length > 0) {
+                            setIsQrCodeExportDialogShow(true)
+                        }
+                    })
+            })
+        close()
     }
 
     return <>
@@ -114,8 +145,8 @@ const ErrorDialog: FC<ErrorDialogProps> = (props: ErrorDialogProps): ReactElemen
                 <Button
                     variant="primary"
                     onClick={(): void => {
-                    close()
-                }}
+                        save()
+                    }}
                 >
                     {
                         `問題のない ${props.qrCodeData.length.toLocaleString()} 件のQRコードを作成`
@@ -123,6 +154,15 @@ const ErrorDialog: FC<ErrorDialogProps> = (props: ErrorDialogProps): ReactElemen
                 </Button>
             </Modal.Footer>
         </Modal>
+
+        {/* QRコードエクスポートダイアログ */}
+        <QrCodeExportDialog
+            isShow={isQrCodeExportDialogShow}
+            setIsShow={setIsQrCodeExportDialogShow}
+            qrCodeData={qrCodeData}
+            options={options}
+            directory={directory}
+        />
     </>
 }
 

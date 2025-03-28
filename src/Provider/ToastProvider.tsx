@@ -21,6 +21,7 @@ export const useToast = () => {
 }
 
 export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
+
     const [show, setShow] = useState(false)
     const [toastKey, setToastKey] = useState(0)
 
@@ -42,58 +43,56 @@ export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
         setShow(true)
     }
 
-    return (
-        <ToastContext.Provider value={showToast}>
-            {children}
+    return <ToastContext.Provider value={showToast}>
+        {children}
 
-            {
-                createPortal(
-                    <ToastContainer
-                        position="top-center"
-                        className="p-3"
-                        style={{
-                            zIndex: 99999
+        {
+            createPortal(
+                <ToastContainer
+                    position="top-center"
+                    className="p-3"
+                    style={{
+                        zIndex: 99999
+                    }}
+                >
+                    <RBToast
+                        key={toastKey}
+                        onClose={(): void => {
+                            setShow(false)
                         }}
+                        show={show}
+                        delay={delay}
+                        autohide
                     >
-                        <RBToast
-                            key={toastKey}
-                            onClose={(): void => {
-                                setShow(false)
-                            }}
-                            show={show}
-                            delay={delay}
-                            autohide
-                        >
-                            <RBToast.Header>
+                        <RBToast.Header>
+                            {
+                                img && <img
+                                    src={img}
+                                    alt={title}
+                                    className="rounded me-2"
+                                    style={{ width: 20, height: 20 }}
+                                />
+                            }
+                            <strong className={`me-auto text-${type}`}>
                                 {
-                                    img && <img
-                                        src={img}
-                                        alt={title}
-                                        className="rounded me-2"
-                                        style={{ width: 20, height: 20 }}
-                                    />
+                                    title
                                 }
-                                <strong className={`me-auto text-${type}`}>
-                                    {
-                                        title
-                                    }
-                                </strong>
-                                <small className={`text-${type}`}>
-                                    {
-                                        subtitle
-                                    }
-                                </small>
-                            </RBToast.Header>
-                            <RBToast.Body style={{ whiteSpace: "pre-wrap" }}>
+                            </strong>
+                            <small className={`text-${type}`}>
                                 {
-                                    body
+                                    subtitle
                                 }
-                            </RBToast.Body>
-                        </RBToast>
-                    </ToastContainer>,
-                    document.body
-                )
-            }
-        </ToastContext.Provider>
-    )
+                            </small>
+                        </RBToast.Header>
+                        <RBToast.Body style={{ whiteSpace: "pre-wrap" }}>
+                            {
+                                body
+                            }
+                        </RBToast.Body>
+                    </RBToast>
+                </ToastContainer>,
+                document.body
+            )
+        }
+    </ToastContext.Provider>
 }

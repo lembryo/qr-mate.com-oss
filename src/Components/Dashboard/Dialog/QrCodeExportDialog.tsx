@@ -1,14 +1,17 @@
 import { Dispatch, FC, ReactElement, SetStateAction, useEffect, useState } from "react"
 import { Button, Modal, ProgressBar } from "react-bootstrap"
-import { Options } from "qr-code-styling"
+import QRCodeStyling, { Options } from "qr-code-styling"
 
 import QrCodeData from "../../../Types/QrCodeData.ts"
+import { writeFile } from "@tauri-apps/plugin-fs"
+import { useToast } from "../../../Provider/ToastProvider.tsx"
 
 type QrExportDialogProps = {
     isShow: boolean
     setIsShow: Dispatch<SetStateAction<boolean>>
     qrCodeData: QrCodeData[]
     options: Options
+    directory: string
 }
 
 /**
@@ -19,64 +22,99 @@ const QrCodeExportDialog: FC<QrExportDialogProps> = (props: QrExportDialogProps)
     const {
         isShow,
         setIsShow,
-        qrCodeData
+        qrCodeData,
+        options,
+        directory
     } = props
 
     const [isExporting, setIsExporting] = useState(false) // エクスポート中かどうか
     const [currentIndex, setCurrentIndex] = useState(0)   // 何件目まで出力完了したか
 
+    const toast = useToast()
+
     useEffect(() => {
         if (isShow) {
             // モーダルが表示されたときに初期化
             handleStartExport()
-                .then(() => {
-                })
         }
     }, [isShow])
 
+    useEffect((): void => {
+        if (currentIndex >= qrCodeData.length) {
+            // エクスポートが完了したとき
+            setIsExporting(false)
+            setCurrentIndex(0)
+            setIsShow(false)
+        }
+    }, [currentIndex])
+
     // エクスポート開始ボタン押下時
-    const handleStartExport = async () => {
+    const handleStartExport = () => {
         setCurrentIndex(0)
         setIsExporting(true)
 
-        // TODO: 実際のエクスポート処理を実装する
-        try {
-            // 全件ループしながら1件ずつファイル出力
-            for (let i = 0; i < qrCodeData.length; i++) {
-                console.log(i)
-                await dummyWait(1 * 1000)
-
-                // i番目の書き出し終了
-                setCurrentIndex(i + 1)
+        qrCodeData.forEach((qrCode: QrCodeData): void => {
+            const data = {
+                ...options,
+                data: qrCode.url,
             }
-        } catch (error) {
-            console.error("エクスポート中にエラー", error)
-            // 必要ならユーザ通知など
-        } finally {
-            setIsExporting(false)
-        }
+            const styling: QRCodeStyling = new QRCodeStyling(data)
+            styling.getRawData("png")
+                .then((blob: Blob | null): void => {
+                    if (!blob) {
+                        return
+                    }
+                    blob.arrayBuffer()
+                        .then((buffer: ArrayBuffer): void => {
+                            const bytes = new Uint8Array(buffer)
+                            const file = `${directory}/${qrCode.filename}.png`
+                            writeFile(file, bytes)
+                                .catch((message: string): void => {
+                                    // エクスポート失敗時の処理
+                                    toast({
+                                        title: "エクスポート失敗",
+                                        body: message,
+                                        type: "error",
+                                    })
+                                })
+                                .finally((): void => {
+                                    setCurrentIndex((prevIndex: number): number => {
+                                        return prevIndex + 1
+                                    })
+                                })
+                        })
+                        .catch((message): void => {
+                            // エクスポート失敗時の処理
+                            toast({
+                                title: "エクスポート失敗",
+                                body: message.toString(),
+                                type: "error",
+                            })
+                            setCurrentIndex((prevIndex: number): number => {
+                                return prevIndex + 1
+                            })
+                        })
+                })
+                .catch((_: Error): void => {
+                    setCurrentIndex((prevIndex: number): number => {
+                        return prevIndex + 1
+                    })
+                })
+        })
     }
 
-    // 閉じるボタン押下時
-    const handleClose = (): void => {
-        setIsShow(false)
-    }
-
-    // 進捗(0〜100)
+    // 進捗(0〜100%)を計算
     const progressPercent: number = qrCodeData.length === 0
         ? 0
         : Math.floor((currentIndex / qrCodeData.length) * 100)
-
-    // 便宜的に非同期待機する関数 (デモ用)
-    async function dummyWait(ms: number) {
-        return new Promise<void>((resolve) => setTimeout(resolve, ms))
-    }
 
     return <>
         {/* モーダル (エクスポートの進捗表示) */}
         <Modal
             show={isShow}
-            onHide={handleClose}
+            onHide={(): void => {
+                setIsShow(false)
+            }}
             backdrop="static" // モーダルの外をクリックしても閉じない
             keyboard={false}  // Escキーでも閉じない
             centered          // 画面中央揃え
@@ -116,7 +154,12 @@ const QrCodeExportDialog: FC<QrExportDialogProps> = (props: QrExportDialogProps)
                             </div>
                         </div>
                         <div className="text-end">
-                            <Button variant="secondary" onClick={handleClose}>
+                            <Button
+                                variant="secondary"
+                                onClick={(): void => {
+                                    setIsShow(false)
+                                }}
+                            >
                                 閉じる
                             </Button>
                         </div>
