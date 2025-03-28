@@ -1,14 +1,17 @@
 import { FC, ReactElement, useState } from "react"
 import { Tab, Tabs } from "react-bootstrap"
+import { Options } from "qr-code-styling"
 
 import QrGenerate from "./QrGenerate.tsx"
-import Qr from "../../Types/Qr.ts"
-import Config from "../../Types/Config.ts"
 
 const Index: FC = (): ReactElement => {
 
-    const [qrs, setQrs] = useState<Qr[]>([])
-    const [config, setConfig] = useState<Config>({})
+    const [options, setOptions] = useState<Options>({
+        data: "https://qr-mate.com/oss",
+        width: 256,
+        height: 256,
+        margin: 10
+    })
 
     return <>
         <Tabs
@@ -18,8 +21,8 @@ const Index: FC = (): ReactElement => {
         >
             <Tab eventKey="generate" title="QR生成">
                 <QrGenerate
-                    config={config}
-                    setConfig={setConfig}
+                    options={options}
+                    setOptions={setOptions}
                 />
             </Tab>
             <Tab eventKey="list" title="生成リスト">
