@@ -1,14 +1,14 @@
-// DotsOptions.tsx
-import React, { ChangeEvent, FC } from "react"
-import { DotsOptions } from "./useDotsOptions"
+import { ChangeEvent, FC, ReactElement } from "react"
 import { DotType } from "qr-code-styling"
+
+import { DotsOptions } from "../../../Types/useDotsOptions.ts"
 
 type DotsOptionsProps = {
     dotsOptions: DotsOptions
     updateDotsOptions: (updates: Partial<DotsOptions>) => void
 }
 
-const DotsOptionsComponent: FC<DotsOptionsProps> = (props) => {
+const DotsOptionsComponent: FC<DotsOptionsProps> = (props: DotsOptionsProps): ReactElement => {
 
     const {
         dotsOptions,
@@ -28,9 +28,11 @@ const DotsOptionsComponent: FC<DotsOptionsProps> = (props) => {
         <select
             className="form-control mb-2"
             value={type}
-            onChange={(e: ChangeEvent<HTMLSelectElement>) => {
+            onChange={(e: ChangeEvent<HTMLSelectElement>): void => {
                 // 「type」を更新
-                updateDotsOptions({ type: e.target.value as DotType })
+                updateDotsOptions({
+                    type: e.target.value as DotType
+                })
             }}
         >
             <option value="rounded">丸み</option>
@@ -48,8 +50,10 @@ const DotsOptionsComponent: FC<DotsOptionsProps> = (props) => {
                 role="switch"
                 id="dotsColorGradientSwitch"
                 checked={gradient}
-                onChange={(event) => {
-                    updateDotsOptions({ gradient: event.target.checked })
+                onChange={(event: ChangeEvent<HTMLInputElement>): void => {
+                    updateDotsOptions({
+                        gradient: event.target.checked
+                    })
                 }}
             />
             <label className="form-check-label" htmlFor="dotsColorGradientSwitch">
@@ -63,7 +67,11 @@ const DotsOptionsComponent: FC<DotsOptionsProps> = (props) => {
                 <input
                     type="color"
                     value={color}
-                    onChange={(e) => updateDotsOptions({ color: e.target.value })}
+                    onChange={(e: ChangeEvent<HTMLInputElement>): void => {
+                        updateDotsOptions({
+                            color: e.target.value
+                        })
+                    }}
                 />
             </> : <>
                 <div className="mb-2">
@@ -71,13 +79,21 @@ const DotsOptionsComponent: FC<DotsOptionsProps> = (props) => {
                     <input
                         type="color"
                         value={color1}
-                        onChange={(e) => updateDotsOptions({ color1: e.target.value })}
+                        onChange={(e: ChangeEvent<HTMLInputElement>): void => {
+                            updateDotsOptions({
+                                color1: e.target.value
+                            })
+                        }}
                     />
                     <label className="form-label ms-3 me-2">色(2)</label>
                     <input
                         type="color"
                         value={color2}
-                        onChange={(e) => updateDotsOptions({ color2: e.target.value })}
+                        onChange={(e: ChangeEvent<HTMLInputElement>): void => {
+                            updateDotsOptions({
+                                color2: e.target.value
+                            })
+                        }}
                     />
                 </div>
 
@@ -88,7 +104,7 @@ const DotsOptionsComponent: FC<DotsOptionsProps> = (props) => {
                         role="switch"
                         id="dotsGradientType"
                         checked={gradientType === "linear"}
-                        onChange={(event) => {
+                        onChange={(event: ChangeEvent<HTMLInputElement>): void => {
                             updateDotsOptions({
                                 gradientType: event.target.checked ? "linear" : "radial"
                             })
@@ -107,8 +123,10 @@ const DotsOptionsComponent: FC<DotsOptionsProps> = (props) => {
                             min={0}
                             max={360}
                             value={gradientRotation}
-                            onChange={(e) =>
-                                updateDotsOptions({ gradientRotation: parseInt(e.target.value) })
+                            onChange={(e: ChangeEvent<HTMLInputElement>): void =>
+                                updateDotsOptions({
+                                    gradientRotation: parseInt(e.target.value)
+                                })
                             }
                         />
                         <span className="ms-2">

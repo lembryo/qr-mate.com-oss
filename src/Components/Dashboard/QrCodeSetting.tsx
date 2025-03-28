@@ -16,9 +16,13 @@ import useCornersDotOptions from "../../Types/useCornersDotOptions.ts"
 import useBackgroundOptions from "../../Types/useBackgroundOptions.ts"
 import BackgroundOptionsComponent from "./Options/BackgroundOptionsComponent.tsx"
 
+import QrCodeData from "../../Types/QrCodeData.ts"
+
 type QrGenerateProps = {
     options: Options
     setOptions: Dispatch<SetStateAction<Options>>
+    data: QrCodeData[]
+    setData: Dispatch<SetStateAction<QrCodeData[]>>
 }
 
 const QrCodeSetting: FC<QrGenerateProps> = (props: QrGenerateProps): ReactElement => {

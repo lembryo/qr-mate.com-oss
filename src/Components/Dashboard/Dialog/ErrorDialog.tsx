@@ -2,10 +2,10 @@ import { pictureDir } from "@tauri-apps/api/path"
 import { open } from "@tauri-apps/plugin-dialog"
 import { CSSProperties, Dispatch, FC, ReactElement, SetStateAction, useState } from "react"
 import { Accordion, Button, Modal } from "react-bootstrap"
-
-import QrCodeData from "../../../Types/QrCodeData.ts"
-import QrCodeExportDialog from "./QrCodeExportDialog.tsx"
 import { Options } from "qr-code-styling"
+
+import QrCodeExportDialog from "./QrCodeExportDialog.tsx"
+import QrCodeData from "../../../Types/QrCodeData.ts"
 
 export type ErrorDialogRecord = {
     text: string
@@ -61,7 +61,7 @@ const ErrorDialog: FC<ErrorDialogProps> = (props: ErrorDialogProps): ReactElemen
             .then((directory: string): void => {
                 open({
                     directory: true,
-                    defaultPath: directory,
+                    defaultPath: directory
                 })
                     .then((directory: string | null): void => {
                         if (!directory) {

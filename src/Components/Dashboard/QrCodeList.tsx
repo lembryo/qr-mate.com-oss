@@ -1,5 +1,7 @@
 import "handsontable/dist/handsontable.full.min.css"
 
+import { pictureDir } from "@tauri-apps/api/path"
+import { open } from "@tauri-apps/plugin-dialog"
 import Handsontable from "handsontable"
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react"
 import { Options } from "qr-code-styling"
@@ -7,8 +9,6 @@ import { Options } from "qr-code-styling"
 import ErrorDialog, { ErrorDialogRecord } from "./Dialog/ErrorDialog.tsx"
 import QrCodeExportDialog from "./Dialog/QrCodeExportDialog.tsx"
 import QrCodeData from "../../Types/QrCodeData.ts"
-import { pictureDir } from "@tauri-apps/api/path"
-import { open } from "@tauri-apps/plugin-dialog"
 
 // @ts-ignore
 const highlightNewLineRenderer = (handsontable: Handsontable, td, row, col, prop, value, cellProperties): void => {
@@ -208,7 +208,9 @@ const QrCodeList = (props: QrCodeListProps) => {
         const loadData: any[][] = data.map((row: QrCodeData): string[] => {
             return [row.filename, row.url]
         })
-        handsontable?.loadData(loadData)
+        if (loadData.length > 0) {
+            handsontable?.loadData(loadData)
+        }
     }, [data])
 
     const check = (): void => {
@@ -299,7 +301,7 @@ const QrCodeList = (props: QrCodeListProps) => {
                 .then((directory: string): void => {
                     open({
                         directory: true,
-                        defaultPath: directory,
+                        defaultPath: directory
                     })
                         .then((directory: string | null): void => {
                             if (!directory) {
