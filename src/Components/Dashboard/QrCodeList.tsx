@@ -1,7 +1,7 @@
 import "handsontable/dist/handsontable.full.min.css"
 
-import { pictureDir } from "@tauri-apps/api/path"
-import { open } from "@tauri-apps/plugin-dialog"
+import { documentDir, pictureDir } from "@tauri-apps/api/path"
+import { open, save } from "@tauri-apps/plugin-dialog"
 import Handsontable from "handsontable"
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react"
 import { Options } from "qr-code-styling"
@@ -9,6 +9,8 @@ import { Options } from "qr-code-styling"
 import ErrorDialog, { ErrorDialogRecord } from "./Dialog/ErrorDialog.tsx"
 import QrCodeExportDialog from "./Dialog/QrCodeExportDialog.tsx"
 import QrCodeData from "../../Types/QrCodeData.ts"
+import { writeFile } from "@tauri-apps/plugin-fs"
+import { useToast } from "../../Provider/ToastProvider.tsx"
 
 // @ts-ignore
 const highlightNewLineRenderer = (handsontable: Handsontable, td, row, col, prop, value, cellProperties): void => {
@@ -93,6 +95,7 @@ const QrCodeList = (props: QrCodeListProps) => {
     const [directory, setDirectory] = useState<string>("")
 
     const handsontableRef = useRef<HTMLDivElement>(null)
+    const toast = useToast()
 
     useEffect(() => {
         let handsontable: Handsontable | null = null
@@ -201,7 +204,7 @@ const QrCodeList = (props: QrCodeListProps) => {
         }
     }, [])
 
-    useEffect(() => {
+    useEffect((): void => {
         if (!handsontable) {
             return
         }
@@ -316,11 +319,72 @@ const QrCodeList = (props: QrCodeListProps) => {
         }
     }
 
+    const csv = (): void => {
+        documentDir()
+            .then((directory: string): void => {
+                save({
+                    filters: [
+                        {
+                            name: "CSV",
+                            extensions: ["csv"]
+                        }
+                    ],
+                    defaultPath: directory
+                })
+                    .then((filePath: string | null): void => {
+                        if (!filePath) {
+                            return
+                        }
+
+                        // CSVファイルのBOMを設定
+                        const BOM = "\uFEFF"
+                        // 行数・列数を取得
+                        const rowCount: number = handsontable?.countRows() || 0
+                        const colCount: number = handsontable?.countCols() || 0
+
+                        // CSV文字列を組み立て
+                        let text: string = BOM  // BOM付きで開始
+
+                        for (let row: number = 0; row < rowCount; row++) {
+                            // 1行分のセルを格納する配列
+                            const rowArray: string[] = []
+                            for (let col: number = 0; col < colCount; col++) {
+                                // セルデータを取得
+                                let value: string = handsontable?.getDataAtCell(row, col) || ""
+                                // ダブルクオート " を "" にエスケープ
+                                value = value.replace(/"/g, `""`)
+                                // 必ずダブルクオートで括る
+                                rowArray.push(`"${value}"`)
+                            }
+                            // カンマ区切りにして改行
+                            text += rowArray.join(",") + "\r\n"
+                        }
+
+                        // CSVファイルとして保存
+                        const bytes: Uint8Array<ArrayBufferLike> = new TextEncoder().encode(text)
+                        writeFile(filePath, bytes)
+                            .then((): void => {
+                                toast({
+                                    title: "通知",
+                                    body: "CSVファイルを保存しました"
+                                })
+                            })
+                            .catch((): void => {
+                                toast({
+                                    title: "通知",
+                                    body: "CSVファイルを保存できませんでした",
+                                    type: "error"
+                                })
+                            })
+                    })
+            })
+    }
+
     return <>
         <div ref={handsontableRef}
              style={{
                  width: "100vw",
-                 height: `calc(100vh - 50px)`,
+                 height: `calc(100vh - 100px)`,
                  margin: "5px",
                  overflowY: "auto"
              }}
@@ -337,6 +401,9 @@ const QrCodeList = (props: QrCodeListProps) => {
         }}>
             <button
                 className="btn btn-secondary"
+                onClick={(): void => {
+                    csv()
+                }}
             >
                 CSV保存
             </button>

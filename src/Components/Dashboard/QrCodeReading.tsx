@@ -1,10 +1,11 @@
-import { Dispatch, FC, ReactElement, SetStateAction, useEffect, useState } from "react"
+import { listen } from "@tauri-apps/api/event"
+import { readFile } from "@tauri-apps/plugin-fs"
+import { ChangeEvent, Dispatch, FC, ReactElement, SetStateAction, useEffect, useRef, useState } from "react"
 import { Button, Card, Spinner } from "react-bootstrap"
 import jsQR, { QRCode } from "jsqr"
 import { Options } from "qr-code-styling"
+
 import QrCodeData from "../../Types/QrCodeData.ts"
-import { listen } from "@tauri-apps/api/event"
-import { readFile } from "@tauri-apps/plugin-fs"
 
 type QrCodeReadingProps = {
     options: Options
@@ -25,6 +26,8 @@ const QrCodeReading: FC<QrCodeReadingProps> = (props: QrCodeReadingProps): React
     const [isLoading, setIsLoading] = useState(false)
     const [qrCodeData, setQrCodeData] = useState<QrCodeData[]>([])
 
+    const ref = useRef<HTMLInputElement>(null)
+
     useEffect((): void => {
         if (!initialize) {
             // Tauri v2 はブラウザ標準のドラッグ＆ドロップを使えないので Tauri v2 のAPIを使う
@@ -34,7 +37,6 @@ const QrCodeReading: FC<QrCodeReadingProps> = (props: QrCodeReadingProps): React
                 }).paths
                 if (paths.length > 0) {
                     setIsLoading(true)
-
                     let count: number = 0
                     const qrCodeData: QrCodeData[] = []
                     paths.forEach((path: string): void => {
@@ -82,6 +84,50 @@ const QrCodeReading: FC<QrCodeReadingProps> = (props: QrCodeReadingProps): React
             return [...data, ...qrCodeData]
         })
     }, [qrCodeData])
+
+    const files = (files: File[]): void => {
+        setIsLoading(true)
+        let count: number = 0
+        const qrCodeData: QrCodeData[] = []
+        for (let i: number = 0; i < files.length; i++) {
+            // file から Uint8Array を生成する
+            const file: File = files[i]
+            const reader = new FileReader()
+            reader.onload = (event): void => {
+                const result: string | ArrayBuffer | null | undefined = event.target?.result
+                if (result instanceof ArrayBuffer) {
+                    const bytes = new Uint8Array(result)
+                    decodeQrFromRawData(bytes)
+                        .then((data: string | null): void => {
+                            const fileName: string = file.name.split(/[\\/]/).pop() || ""
+                            const fileNameWithoutExtension: string = fileName.split(".").slice(0, -1).join(".")
+                            if (data) {
+                                qrCodeData.push({
+                                    filename: fileNameWithoutExtension,
+                                    url: data
+                                })
+                            } else {
+                                qrCodeData.push({
+                                    filename: fileNameWithoutExtension,
+                                    url: "QRコードが読み取れませんでした..."
+                                })
+                            }
+                        })
+                        .finally((): void => {
+                            count += 1
+                            if (count === files.length) {
+                                setIsLoading(false)
+                                setQrCodeData(qrCodeData)
+                            }
+                        })
+                }
+            }
+            reader.onerror = (error): void => {
+            }
+            // ArrayBufferとして読み込む
+            reader.readAsArrayBuffer(file)
+        }
+    }
 
     const decodeQrFromRawData = (
         data: Uint8Array
@@ -134,11 +180,26 @@ const QrCodeReading: FC<QrCodeReadingProps> = (props: QrCodeReadingProps): React
         <div className="m-2">
             <Card
                 className="mb-3 p-3 text-center"
+                onClick={(): void => {
+                    ref?.current?.click()
+                }}
                 style={{
                     cursor: "pointer",
                     border: "2px dashed #aaa"
                 }}
             >
+                <input
+                    ref={ref}
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={(event: ChangeEvent<HTMLInputElement>): void => {
+                        files(event.currentTarget.files)
+                    }}
+                    style={{
+                        display: "none"
+                    }}
+                />
                 {
                     isLoading ? <>
                         <Spinner animation="border" role="status" />
