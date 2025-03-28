@@ -19,7 +19,6 @@
         "@tauri-apps/plugin-shell": "2.2.0",
         "bootstrap": "5.3.3",
         "bootswatch": "5.3.3",
-        "jsqr": "1.4.0",
         "qr-code-styling": "1.9.1",
         "react": "19.0.0",
         "react-bootstrap": "2.10.9",

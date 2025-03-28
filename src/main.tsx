@@ -1,9 +1,14 @@
 import React from "react"
-import ReactDOM from "react-dom/client"
-import App from "./App"
+import { createRoot } from "react-dom/client"
 
-ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-    <React.StrictMode>
-        <App />
-    </React.StrictMode>
-)
+import Routing from "./Routing.tsx"
+
+const root: HTMLElement | null = document.getElementById("root")
+
+if (root) {
+    createRoot(root).render(
+        <React.StrictMode>
+            <Routing />
+        </React.StrictMode>
+    )
+}
