@@ -4,6 +4,7 @@ import { Options } from "qr-code-styling"
 
 import QrCodeSetting from "./QrCodeSetting.tsx"
 import QrCodeList from "./QrCodeList.tsx"
+import QrCodeReading from "./QrCodeReading.tsx"
 import QrCodeData from "../../Types/QrCodeData.ts"
 
 const Index: FC = (): ReactElement => {
@@ -26,6 +27,8 @@ const Index: FC = (): ReactElement => {
                 <QrCodeSetting
                     options={options}
                     setOptions={setOptions}
+                    data={data}
+                    setData={setData}
                 />
             </Tab>
             <Tab eventKey="qr-code-list" title="QRコードリスト">
@@ -37,7 +40,12 @@ const Index: FC = (): ReactElement => {
                 />
             </Tab>
             <Tab eventKey="qr-code-reading" title="QRコード読み込み">
-                QR読み込み
+                <QrCodeReading
+                    options={options}
+                    setOptions={setOptions}
+                    data={data}
+                    setData={setData}
+                />
             </Tab>
         </Tabs>
     </>

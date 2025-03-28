@@ -1,9 +1,9 @@
+import { writeFile } from "@tauri-apps/plugin-fs"
 import { Dispatch, FC, ReactElement, SetStateAction, useEffect, useState } from "react"
 import { Button, Modal, ProgressBar } from "react-bootstrap"
 import QRCodeStyling, { Options } from "qr-code-styling"
 
 import QrCodeData from "../../../Types/QrCodeData.ts"
-import { writeFile } from "@tauri-apps/plugin-fs"
 import { useToast } from "../../../Provider/ToastProvider.tsx"
 
 type QrExportDialogProps = {
@@ -49,14 +49,14 @@ const QrCodeExportDialog: FC<QrExportDialogProps> = (props: QrExportDialogProps)
     }, [currentIndex])
 
     // エクスポート開始ボタン押下時
-    const handleStartExport = () => {
+    const handleStartExport = (): void => {
         setCurrentIndex(0)
         setIsExporting(true)
 
         qrCodeData.forEach((qrCode: QrCodeData): void => {
             const data = {
                 ...options,
-                data: qrCode.url,
+                data: qrCode.url
             }
             const styling: QRCodeStyling = new QRCodeStyling(data)
             styling.getRawData("png")
@@ -74,7 +74,7 @@ const QrCodeExportDialog: FC<QrExportDialogProps> = (props: QrExportDialogProps)
                                     toast({
                                         title: "エクスポート失敗",
                                         body: message,
-                                        type: "error",
+                                        type: "error"
                                     })
                                 })
                                 .finally((): void => {
@@ -88,7 +88,7 @@ const QrCodeExportDialog: FC<QrExportDialogProps> = (props: QrExportDialogProps)
                             toast({
                                 title: "エクスポート失敗",
                                 body: message.toString(),
-                                type: "error",
+                                type: "error"
                             })
                             setCurrentIndex((prevIndex: number): number => {
                                 return prevIndex + 1

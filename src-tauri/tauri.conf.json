@@ -1,8 +1,8 @@
 {
     "$schema": "https://schema.tauri.app/config/2",
-    "productName": "qr-mate",
-    "version": "0.1.0",
-    "identifier": "com.lembryo.qr-mate",
+    "productName": "qr-mate-oss",
+    "version": "1.0.0",
+    "identifier": "com.lembryo.qr-mate-oss",
     "build": {
         "beforeDevCommand": "npm run dev",
         "devUrl": "http://localhost:1420",
@@ -15,7 +15,8 @@
                 "title": "QR Mate OSS",
                 "width": 880,
                 "height": 480,
-                "resizable": false
+                "resizable": true,
+                "dragDropEnabled": true
             }
         ],
         "security": {

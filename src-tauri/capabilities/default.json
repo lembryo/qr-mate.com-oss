@@ -9,6 +9,7 @@
         "core:default",
         "dialog:default",
         "fs:write-all",
+        "fs:read-files",
         "shell:allow-open",
         "shell:default"
     ]
