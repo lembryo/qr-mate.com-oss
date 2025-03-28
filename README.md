@@ -1,6 +1,6 @@
 # QR Mate OSS – 高速・高機能なオフラインQRコード生成アプリ（オープンソース版）
 
-![QR Mate Logo](./assets/logo.png)
+![QR Mate Logo](./public/logo.png)
 
 **QR Mate OSS** は、完全オフラインで動作するQRコード生成・カスタマイズアプリです。  
 Excelやスプレッドシートからの大量データ貼り付けに対応し、シンプルで高速な一括QR生成を実現します。  
