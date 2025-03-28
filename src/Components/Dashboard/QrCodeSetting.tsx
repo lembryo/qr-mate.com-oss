@@ -21,7 +21,7 @@ type QrGenerateProps = {
     setOptions: Dispatch<SetStateAction<Options>>
 }
 
-const QrGenerate: FC<QrGenerateProps> = (props: QrGenerateProps): ReactElement => {
+const QrCodeSetting: FC<QrGenerateProps> = (props: QrGenerateProps): ReactElement => {
 
     // QRコード全体用のOptions
     const {
@@ -306,4 +306,4 @@ const QrGenerate: FC<QrGenerateProps> = (props: QrGenerateProps): ReactElement =
     )
 }
 
-export default QrGenerate
+export default QrCodeSetting
