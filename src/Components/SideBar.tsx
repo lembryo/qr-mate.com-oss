@@ -4,18 +4,15 @@ import { Theme } from "@tauri-apps/api/window"
 import { FC, ReactElement } from "react"
 import { Nav } from "react-bootstrap"
 import { Link } from "react-router-dom"
-import Project from "../Types/Project.ts"
 
 type SideBarProps = {
     theme: Theme
-    projects: Project[]
 }
 
 const SideBar: FC<SideBarProps> = (props: SideBarProps): ReactElement => {
 
     const {
-        theme,
-        projects
+        theme
     } = props
 
     return <>

@@ -10,12 +10,10 @@ import Loading from "./Components/Loading.tsx"
 import Dashboard from "./Components/Dashboard/Index.tsx"
 import { ToastProvider } from "./Provider/ToastProvider.tsx"
 import SideBar from "./Components/SideBar.tsx"
-import Project from "./Types/Project.ts"
 
 const Routing: FC = (): ReactElement => {
 
     const [theme] = useState<Theme>("light")
-    const [projects, setProjects] = useState<Project[]>([])
 
     useEffect(() => {
 
@@ -80,7 +78,7 @@ const Routing: FC = (): ReactElement => {
             Component(): ReactElement {
                 return <>
                     <ToastProvider>
-                        <SideBar theme={theme} projects={projects} />
+                        <SideBar theme={theme} />
                         <main className="main" data-bs-theme={theme}>
                             <Outlet />
                         </main>
