@@ -4,7 +4,7 @@
 
 **QR Mate OSS** は、完全オフラインで動作するQRコード生成・カスタマイズアプリです。  
 Excelやスプレッドシートからの大量データ貼り付けに対応し、シンプルで高速な一括QR生成を実現します。  
-スタンドアロンPCアプリとして、セキュリティを重視した現場業務にも適応可能です。
+スタンドアロンなアプリとして、セキュリティを重視した現場業務にも適応可能です。
 
 ---
 
@@ -18,6 +18,7 @@ Excelやスプレッドシートからの大量データ貼り付けに対応し
 - ✅ **ExcelやGoogleスプレッドシートなどから大量データを貼り付け対応**
 - ✅ **Tauri + Rust + React による高パフォーマンス構成**
 - ✅ **MITライセンスで自由に利用・改変可能**
+- ✅ **Windows(x86_64) / macOS(Intel & Apple Silicon) / Linux(x86_64) 対応**
 
 ---
 
@@ -26,6 +27,7 @@ Excelやスプレッドシートからの大量データ貼り付けに対応し
 オープンソース版に含まれない機能一覧：
 
 - ☑️ **QRコード生成・読み込み履歴**
+- ☑️ **CSV・Excelファイル直接読み込み**
 - ☑️ **ZIP圧縮一括保存機能**
 - ☑️ **WebカメラによるリアルタイムQRコード読み取り**
 
@@ -65,9 +67,13 @@ npm run tauri build
 
 ## 💬 スクリーンショット
 
-<p>
-  <img src="./public/screenshot_setting.png" width="600" alt="QR Mate OSS Screenshot" />
-</p>
+<table>
+  <tr>
+    <td><img src="./public/screenshot_setting.png" alt="QR Mate OSS 設定画面" /></td>
+    <td><img src="./public/screenshot_list.png" alt="QR Mate OSS リスト画面" /></td>
+    <td><img src="./public/screenshot_reading.png" alt="QR Mate OSS 読み込み画面" /></td>
+  </tr>
+</table>
 
 ---
 
@@ -83,13 +89,13 @@ npm run tauri build
 QR Mateの製品版では、以下の機能を追加で提供しています：
 
 - ☑️ QRコード生成・読み込み履歴
+- ☑️ CSV・Excelファイル直接読み込み
 - ☑️ ZIP圧縮一括保存機能
 - ☑️ WebカメラによるリアルタイムQRコード読み取り
-- ☑️ 画像ファイルからの連続読み取り・ファイル保存
 
 製品版導入、またはアプリの**権利ごと譲渡のご相談**は以下までご連絡ください：
 
-📧 **mao.lembryo@gmail.com**
+📧 **[mao.lembryo@gmail.com](mailto:mao.lembryo@gmail.com)**
 
 ---
 
