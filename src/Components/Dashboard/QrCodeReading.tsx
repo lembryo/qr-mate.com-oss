@@ -85,7 +85,7 @@ const QrCodeReading: FC<QrCodeReadingProps> = (props: QrCodeReadingProps): React
         })
     }, [qrCodeData])
 
-    const files = (files: File[]): void => {
+    const files = (files: FileList): void => {
         setIsLoading(true)
         let count: number = 0
         const qrCodeData: QrCodeData[] = []
@@ -122,7 +122,7 @@ const QrCodeReading: FC<QrCodeReadingProps> = (props: QrCodeReadingProps): React
                         })
                 }
             }
-            reader.onerror = (error): void => {
+            reader.onerror = (): void => {
             }
             // ArrayBufferとして読み込む
             reader.readAsArrayBuffer(file)
@@ -194,7 +194,9 @@ const QrCodeReading: FC<QrCodeReadingProps> = (props: QrCodeReadingProps): React
                     accept="image/*"
                     multiple
                     onChange={(event: ChangeEvent<HTMLInputElement>): void => {
-                        files(event.currentTarget.files)
+                        if (event.currentTarget.files) {
+                            files(event.currentTarget.files)
+                        }
                     }}
                     style={{
                         display: "none"
