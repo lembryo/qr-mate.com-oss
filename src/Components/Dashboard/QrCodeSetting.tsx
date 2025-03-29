@@ -183,8 +183,10 @@ const QrCodeSetting: FC<QrGenerateProps> = (props: QrGenerateProps): ReactElemen
         }
     }
 
-    return (
-        <div className="d-flex">
+    return <>
+        <div className="d-flex" style={{
+            maxWidth: "880px"
+        }}>
             {/* 左側: QRコードと中央画像設定 */}
             <div className="mt-2">
                 <div style={{ width: 256, marginRight: 20 }}>
@@ -307,7 +309,7 @@ const QrCodeSetting: FC<QrGenerateProps> = (props: QrGenerateProps): ReactElemen
                 </Tabs>
             </div>
         </div>
-    )
+    </>
 }
 
 export default QrCodeSetting
