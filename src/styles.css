@@ -4,10 +4,110 @@ html {
 }
 
 body {
-    margin: 0;
+    user-select: none;
     cursor: default;
+    overflow: hidden;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
 }
 
 button {
     cursor: pointer;
+}
+
+.main {
+    padding-left: 200px;
+    transition: all .35s ease-in-out;
+}
+
+.btn-outline-primary {
+    color: #6C757D !important;
+    border-color: #6C757D !important;
+    background-color: transparent !important;
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-outline-primary:hover {
+    color: #FFFFFF !important;
+    background-color: #6C757D !important;
+    border-color: #6C757D !important;
+}
+
+.btn-outline-primary:active,
+.btn-outline-primary:focus {
+    color: #FFFFFF !important;
+    background-color: #343A40 !important;
+    border-color: #343A40 !important;
+    box-shadow: 0 0 0 0.2rem rgba(108, 117, 125, 0.5) !important;
+}
+
+.nav ul {
+    width: 200px;
+    list-style: none;
+    padding-inline-start: 0;
+}
+
+.nav > ul > li {
+    height: 75px;
+    position: relative;
+    font-size: 20px;
+    display: flex;
+}
+
+.nav a {
+    text-decoration: none;
+    display: block;
+    padding: 15px 0;
+}
+
+.nav a:hover {
+    background: rgba(var(--bs-secondary-rgb), 0.5);
+    opacity: 1;
+}
+
+.nav-tabs {
+    border-bottom: 1px solid #6C757D;
+}
+
+.nav-tabs .nav-link {
+    color: #6C757D;
+    border: 1px solid transparent;
+    background-color: transparent;
+    transition: all 0.2s ease-in-out;
+}
+
+.nav-tabs .nav-link:hover {
+    color: #343A40;
+    border-color: #6C757D;
+}
+
+.nav-tabs .nav-link.active {
+    color: #FFFFFF;
+    background-color: #6C757D;
+    border-color: #6C757D;
+}
+
+.border-primary {
+    border-color: #6C757D !important;
+}
+
+.position-absolute {
+    padding-left: 200px;
+}
+
+.sidebar {
+    top: 0;
+    padding-left: 0;
+    width: 200px;
+    height: 100vh;
+    position: fixed;
+    z-index: 10001;
+}
+
+.qr-canvas {
+    width: 256px;
+    height: 256px;
 }
