@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "QR Mate OSS"
-#define MyAppVersion "1.0.0 - RC1"
+#define MyAppVersion "1.0.0-RC1"
 #define MyAppPublisher "mao <mao.lembryo@gmail.com>"
 #define MyAppURL "https://qr-mate.com/"
 #define MyAppExeName "QR_Mate_OSS.exe"
@@ -20,7 +20,7 @@ AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 DefaultDirName={autopf}\{#MyAppName}
 DisableProgramGroupPage=yes
-LicenseFile=LICENCE.txt
+LicenseFile=../LICENSE.txt
 ; Remove the following line to run in administrative install mode (install for all users.)
 PrivilegesRequired=lowest
 OutputBaseFilename={#StringChange(MyAppName, ' ', '_')}-v{#MyAppVersion}-x86_64
