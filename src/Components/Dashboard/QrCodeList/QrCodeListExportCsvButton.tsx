@@ -8,7 +8,7 @@ type QrCodeListCsvExportButtonProps = {
     data: string[][]
 }
 
-const QrCodeListCsvExportButton = (props: QrCodeListCsvExportButtonProps) => {
+const QrCodeListExportCsvButton = (props: QrCodeListCsvExportButtonProps) => {
 
     const { data } = props
 
@@ -81,4 +81,4 @@ const QrCodeListCsvExportButton = (props: QrCodeListCsvExportButtonProps) => {
     </>
 }
 
-export default QrCodeListCsvExportButton
+export default QrCodeListExportCsvButton
