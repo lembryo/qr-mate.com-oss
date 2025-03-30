@@ -5,7 +5,6 @@ import { Options } from "qr-code-styling"
 import QrCodeSetting from "./QrCodeSetting.tsx"
 import QrCodeList from "./QrCodeList.tsx"
 import QrCodeReading from "./QrCodeReading.tsx"
-import QrCodeData from "../../Types/QrCodeData.ts"
 
 const Index: FC = (): ReactElement => {
 
@@ -15,7 +14,7 @@ const Index: FC = (): ReactElement => {
         height: 256,
         margin: 10
     })
-    const [data, setData] = useState<QrCodeData[]>([])
+    const [data, setData] = useState<string[][]>([])
 
     return <>
         <Tabs

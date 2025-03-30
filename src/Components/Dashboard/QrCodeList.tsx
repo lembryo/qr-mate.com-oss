@@ -1,16 +1,15 @@
 import "handsontable/dist/handsontable.full.min.css"
 
-import { documentDir, pictureDir } from "@tauri-apps/api/path"
-import { open, save } from "@tauri-apps/plugin-dialog"
+import { pictureDir } from "@tauri-apps/api/path"
+import { open } from "@tauri-apps/plugin-dialog"
 import Handsontable from "handsontable"
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react"
+import { Dispatch, SetStateAction, useState } from "react"
 import { Options } from "qr-code-styling"
 
-import ErrorDialog, { ErrorDialogRecord } from "./Dialog/ErrorDialog.tsx"
-import QrCodeExportDialog from "./Dialog/QrCodeExportDialog.tsx"
+import { ErrorDialogRecord } from "./Dialog/ErrorDialog.tsx"
 import QrCodeData from "../../Types/QrCodeData.ts"
-import { writeFile } from "@tauri-apps/plugin-fs"
-import { useToast } from "../../Provider/ToastProvider.tsx"
+import QrCodeListHandsontable from "./QrCodeList/QrCodeListHandsontable.tsx"
+import QrCodeListCsvExportButton from "./QrCodeList/QrCodeListCsvExportButton.tsx"
 
 // @ts-ignore
 const highlightNewLineRenderer = (handsontable: Handsontable, td, row, col, prop, value, cellProperties): void => {
@@ -75,8 +74,8 @@ Handsontable.renderers.registerRenderer("highlightNewLineRenderer", highlightNew
 type QrCodeListProps = {
     options: Options
     setOptions: Dispatch<SetStateAction<Options>>
-    data: QrCodeData[]
-    setData: Dispatch<SetStateAction<QrCodeData[]>>
+    data: string[][]
+    setData: Dispatch<SetStateAction<string[][]>>
 }
 
 const QrCodeList = (props: QrCodeListProps) => {
@@ -87,144 +86,16 @@ const QrCodeList = (props: QrCodeListProps) => {
         setData
     } = props
 
-    const [handsontable, setHandsontable] = useState<Handsontable | null>(null)
     const [isErrorDialogShow, setIsErrorDialogShow] = useState<boolean>(false)
     const [isQrCodeExportDialogShow, setIsQrCodeExportDialogShow] = useState<boolean>(false)
     const [errors, setErrors] = useState<ErrorDialogRecord[]>([])
     const [qrCodeData, setQrCodeData] = useState<QrCodeData[]>([])
     const [directory, setDirectory] = useState<string>("")
 
-    const handsontableRef = useRef<HTMLDivElement>(null)
-    const toast = useToast()
-
-    useEffect(() => {
-        let handsontable: Handsontable | null = null
-        if (handsontableRef.current) {
-            handsontable = new Handsontable(handsontableRef.current, {
-                afterChange(changes, source) {
-                    if (changes && source !== "loadData") {
-                        // 変更後のデータを取得し、Reactのstateを更新
-                        const data = handsontable?.getData() || []
-                        setData(data.map((row: string[]): QrCodeData => {
-                            return {
-                                filename: row[0],
-                                url: row[1]
-                            }
-                        }))
-                    }
-                },
-                // @ts-ignore
-                afterDocumentKeyDown: (e: KeyboardEvent): void => {
-                    // Enterキーでない場合は無視
-                    if (e.key !== "Enter") return
-
-                    const selection = handsontable?.getSelected()
-                    if (!selection) return
-
-                    // selection[0] は [startRow, startCol, endRow, endCol]
-                    const [startRow, startCol] = selection[0]
-
-                    const totalRows = handsontable?.countRows() || 0
-
-                    // 「最終行」かをチェック
-                    if (startRow === totalRows - 1) {
-                        // 新しい行を末尾に追加
-                        handsontable?.alter("insert_row", totalRows)
-
-                        // 追加後、行数が1増えたので「totalRows」行目が新しい行
-                        // フォーカスは "startCol"（もともとのカラム位置）へ移す
-                        handsontable?.selectCell(totalRows, startCol)
-                    }
-                },
-                autoColumnSize: true,
-                autoWrapCol: true,
-                autoWrapRow: true,
-                bindRowsWithHeaders: false,
-                data: [["", ""]],
-                cells: () => {
-                    const cellProperties = {
-                        renderer: ""
-                    }
-                    cellProperties.renderer = "highlightNewLineRenderer"
-                    return cellProperties
-                },
-                colHeaders: true,
-                colWidths: [200, window.innerWidth - 450 - 5 * 2],
-                columnSorting: true,
-                // @ts-ignore
-                contextMenu: {
-                    items: {
-                        cut: {
-                            name: "切り取り"
-                        },
-                        copy: {
-                            name: "コピー"
-                        },
-                        paste: {
-                            name: "貼り付け"
-                        },
-                        sp: "---------",
-                        row_above: {
-                            name: "行を挿入"
-                        },
-                        remove_row: {
-                            name: "行を削除"
-                        }
-                    }
-                },
-                fillHandle: true,
-                filters: true,
-                fixedRowsTop: 0,
-                // @ts-ignore
-                height: "100%",
-                manualColumnResize: true,
-                manualRowResize: true,
-                manualColumnMove: true,
-                manualRowMove: true,
-                minCols: 2,
-                minRows: 1,
-                maxCols: 2,
-                outsideClickDeselects: true,
-                rowHeaderWidth: 50,
-                // @ts-ignore
-                rowHeaders: true,
-                renderAllRows: false,
-                search: false,
-                trimRows: true,
-                trimWhitespace: true,
-                // @ts-ignore
-                width: "100%",
-                wordWrap: false
-            })
-            setHandsontable(handsontable)
-        }
-
-        return (): void => {
-            handsontable?.destroy()
-        }
-    }, [])
-
-    useEffect((): void => {
-        if (!handsontable) {
-            return
-        }
-        const loadData: any[][] = data.map((row: QrCodeData): string[] => {
-            return [row.filename, row.url]
-        })
-        if (loadData.length > 0) {
-            handsontable?.loadData(loadData)
-        }
-    }, [data])
-
     const check = (): void => {
-        if (!handsontable) {
-            return
-        }
-
         const errors: ErrorDialogRecord[] = []
         const qrCodeData: QrCodeData[] = []
 
-        const data: any[][] = handsontable.getData()
         // 空行を削除
         data.filter((row: string[]): boolean => {
             return row.some((cell: string): boolean => {
@@ -319,77 +190,16 @@ const QrCodeList = (props: QrCodeListProps) => {
         }
     }
 
-    const csv = (): void => {
-        documentDir()
-            .then((directory: string): void => {
-                save({
-                    filters: [
-                        {
-                            name: "CSV",
-                            extensions: ["csv"]
-                        }
-                    ],
-                    defaultPath: directory
-                })
-                    .then((filePath: string | null): void => {
-                        if (!filePath) {
-                            return
-                        }
-
-                        // CSVファイルのBOMを設定
-                        const BOM = "\uFEFF"
-                        // 行数・列数を取得
-                        const rowCount: number = handsontable?.countRows() || 0
-                        const colCount: number = handsontable?.countCols() || 0
-
-                        // CSV文字列を組み立て
-                        let text: string = BOM  // BOM付きで開始
-
-                        for (let row: number = 0; row < rowCount; row++) {
-                            // 1行分のセルを格納する配列
-                            const rowArray: string[] = []
-                            for (let col: number = 0; col < colCount; col++) {
-                                // セルデータを取得
-                                let value: string = handsontable?.getDataAtCell(row, col) || ""
-                                // ダブルクオート " を "" にエスケープ
-                                value = value.replace(/"/g, `""`)
-                                // 必ずダブルクオートで括る
-                                rowArray.push(`"${value}"`)
-                            }
-                            // カンマ区切りにして改行
-                            text += rowArray.join(",") + "\r\n"
-                        }
-
-                        // CSVファイルとして保存
-                        const bytes: Uint8Array<ArrayBufferLike> = new TextEncoder().encode(text)
-                        writeFile(filePath, bytes)
-                            .then((): void => {
-                                toast({
-                                    title: "通知",
-                                    body: "CSVファイルを保存しました"
-                                })
-                            })
-                            .catch((): void => {
-                                toast({
-                                    title: "通知",
-                                    body: "CSVファイルを保存できませんでした",
-                                    type: "error"
-                                })
-                            })
-                    })
-            })
-    }
-
     return <>
-        <div ref={handsontableRef}
-             style={{
-                 width: "100vw",
-                 height: `calc(100vh - 100px)`,
-                 margin: "5px",
-                 overflowY: "auto"
-             }}
-        >
-        </div>
+        <QrCodeListHandsontable
+            data={data}
+            setData={setData}
+            style={{
+                width: "100vw",
+                height: "calc(100vh - 100px)",
+                margin: "5px"
+            }}
+        />
 
         {/* 画面右下に固定配置 */}
         <div style={{
@@ -399,14 +209,9 @@ const QrCodeList = (props: QrCodeListProps) => {
             display: "flex",
             gap: "8px"
         }}>
-            <button
-                className="btn btn-secondary"
-                onClick={(): void => {
-                    csv()
-                }}
-            >
-                CSV保存
-            </button>
+            <QrCodeListCsvExportButton
+                data={data}
+            />
             <button
                 className="btn btn-primary"
                 onClick={(): void => {
@@ -417,23 +222,23 @@ const QrCodeList = (props: QrCodeListProps) => {
             </button>
         </div>
 
-        {/* QRコードエクスポートダイアログ */}
-        <QrCodeExportDialog
-            isShow={isQrCodeExportDialogShow}
-            setIsShow={setIsQrCodeExportDialogShow}
-            qrCodeData={qrCodeData}
-            options={options}
-            directory={directory}
-        />
+        {/*/!* QRコードエクスポートダイアログ *!/*/}
+        {/*<QrCodeExportDialog*/}
+        {/*    isShow={isQrCodeExportDialogShow}*/}
+        {/*    setIsShow={setIsQrCodeExportDialogShow}*/}
+        {/*    qrCodeData={qrCodeData}*/}
+        {/*    options={options}*/}
+        {/*    directory={directory}*/}
+        {/*/>*/}
 
-        {/* エラー表示ダイアログ */}
-        <ErrorDialog
-            isShow={isErrorDialogShow}
-            setShow={setIsErrorDialogShow}
-            errors={errors}
-            qrCodeData={qrCodeData}
-            options={options}
-        />
+        {/*/!* エラー表示ダイアログ *!/*/}
+        {/*<ErrorDialog*/}
+        {/*    isShow={isErrorDialogShow}*/}
+        {/*    setShow={setIsErrorDialogShow}*/}
+        {/*    errors={errors}*/}
+        {/*    qrCodeData={qrCodeData}*/}
+        {/*    options={options}*/}
+        {/*/>*/}
     </>
 }
 
