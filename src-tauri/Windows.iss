@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "QR Mate OSS"
-#define MyAppVersion "1.0.0-RC1"
+#define MyAppVersion "0.1.0"
 #define MyAppPublisher "mao <mao.lembryo@gmail.com>"
 #define MyAppURL "https://qr-mate.com/"
 #define MyAppExeName "QR_Mate_OSS.exe"

@@ -5,13 +5,11 @@ import { Button, Card, Spinner } from "react-bootstrap"
 import jsQR, { QRCode } from "jsqr"
 import { Options } from "qr-code-styling"
 
-import QrCodeData from "../../Types/QrCodeData.ts"
-
 type QrCodeReadingProps = {
     options: Options
     setOptions: Dispatch<SetStateAction<Options>>
-    data: QrCodeData[]
-    setData: Dispatch<SetStateAction<QrCodeData[]>>
+    data: string[][]
+    setData: Dispatch<SetStateAction<string[][]>>
 }
 
 // 何としても初回のみ実行するためのフラグ
@@ -24,7 +22,7 @@ const QrCodeReading: FC<QrCodeReadingProps> = (props: QrCodeReadingProps): React
     } = props
 
     const [isLoading, setIsLoading] = useState(false)
-    const [qrCodeData, setQrCodeData] = useState<QrCodeData[]>([])
+    const [qrCodeData, setQrCodeData] = useState<string[][]>([])
 
     const ref = useRef<HTMLInputElement>(null)
 
@@ -38,7 +36,7 @@ const QrCodeReading: FC<QrCodeReadingProps> = (props: QrCodeReadingProps): React
                 if (paths.length > 0) {
                     setIsLoading(true)
                     let count: number = 0
-                    const qrCodeData: QrCodeData[] = []
+                    const qrCodeData: string[][] = []
                     paths.forEach((path: string): void => {
                         readFile(path)
                             .then((bytes: Uint8Array<ArrayBufferLike>): void => {
@@ -48,15 +46,15 @@ const QrCodeReading: FC<QrCodeReadingProps> = (props: QrCodeReadingProps): React
                                         const fileName: string = path.split(/[\\/]/).pop() || ""
                                         const fileNameWithoutExtension: string = fileName.split(".").slice(0, -1).join(".")
                                         if (data) {
-                                            qrCodeData.push({
-                                                filename: fileNameWithoutExtension,
-                                                url: data
-                                            })
+                                            qrCodeData.push([
+                                                fileNameWithoutExtension,
+                                                data
+                                            ])
                                         } else {
-                                            qrCodeData.push({
-                                                filename: fileNameWithoutExtension,
-                                                url: "QRコードが読み取れませんでした..."
-                                            })
+                                            qrCodeData.push([
+                                                fileNameWithoutExtension,
+                                                "QRコードが読み取れませんでした..."
+                                            ])
                                         }
                                     })
                                     .finally((): void => {
@@ -80,7 +78,7 @@ const QrCodeReading: FC<QrCodeReadingProps> = (props: QrCodeReadingProps): React
     }, [])
 
     useEffect((): void => {
-        setData((data: QrCodeData[]): QrCodeData[] => {
+        setData((data: string[][]): string[][] => {
             return [...data, ...qrCodeData]
         })
     }, [qrCodeData])
@@ -88,7 +86,7 @@ const QrCodeReading: FC<QrCodeReadingProps> = (props: QrCodeReadingProps): React
     const files = (files: FileList): void => {
         setIsLoading(true)
         let count: number = 0
-        const qrCodeData: QrCodeData[] = []
+        const qrCodeData: string[][] = []
         for (let i: number = 0; i < files.length; i++) {
             // file から Uint8Array を生成する
             const file: File = files[i]
@@ -102,15 +100,15 @@ const QrCodeReading: FC<QrCodeReadingProps> = (props: QrCodeReadingProps): React
                             const fileName: string = file.name.split(/[\\/]/).pop() || ""
                             const fileNameWithoutExtension: string = fileName.split(".").slice(0, -1).join(".")
                             if (data) {
-                                qrCodeData.push({
-                                    filename: fileNameWithoutExtension,
-                                    url: data
-                                })
+                                qrCodeData.push([
+                                    fileNameWithoutExtension,
+                                    data
+                                ])
                             } else {
-                                qrCodeData.push({
-                                    filename: fileNameWithoutExtension,
-                                    url: "QRコードが読み取れませんでした..."
-                                })
+                                qrCodeData.push([
+                                    fileNameWithoutExtension,
+                                    "QRコードが読み取れませんでした..."
+                                ])
                             }
                         })
                         .finally((): void => {

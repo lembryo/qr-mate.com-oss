@@ -1,6 +1,6 @@
 [package]
 name = "QR_Mate_OSS"
-version = "1.0.0"
+version = "0.1.0"
 description = "A fully offline, secure QR code generator and reader built with Tauri, designed for large-scale usage."
 authors = ["mao <mao.lembryo@gmail.com>"]
 license = "MIT License"
