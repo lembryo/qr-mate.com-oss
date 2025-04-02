@@ -30,8 +30,6 @@ const Index: FC = (): ReactElement => {
                 <QrCodeSetting
                     options={options}
                     setOptions={setOptions}
-                    data={data}
-                    setData={setData}
                 />
             </Tab>
             <Tab eventKey="qr-code-list" title="QRコードリスト">
