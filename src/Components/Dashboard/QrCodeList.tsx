@@ -3,9 +3,10 @@ import Handsontable from "handsontable"
 import { Dispatch, SetStateAction } from "react"
 import { Options } from "qr-code-styling"
 
-import QrCodeListHandsontable from "./QrCodeList/QrCodeListHandsontable.tsx"
-import QrCodeListExportCsvButton from "./QrCodeList/QrCodeListExportCsvButton.tsx"
 import QrCodeListExportPngButton from "./QrCodeList/QrCodeListExportPngButton.tsx"
+import QrCodeListExportCsvButton from "./QrCodeList/QrCodeListExportCsvButton.tsx"
+import QrCodeListHandsontable from "./QrCodeList/QrCodeListHandsontable.tsx"
+import { useData } from "../../Provider/DataProvider.tsx"
 
 // @ts-ignore
 const highlightNewLineRenderer = (handsontable: Handsontable, td, row, col, prop, value, cellProperties): void => {
@@ -21,7 +22,7 @@ const highlightNewLineRenderer = (handsontable: Handsontable, td, row, col, prop
         value,
         cellProperties)
 
-    // 2) A列(0番目)とB列(1番目)の値を取得し、空白かどうかを判定
+    // A列(0番目)とB列(1番目)の値を取得し、空白かどうかを判定
     const aVal: any = handsontable.getDataAtCell(row, 0) || ""
     const bVal: any = handsontable.getDataAtCell(row, 1) || ""
     const isAEmpty: boolean = aVal.trim() === ""
@@ -56,8 +57,7 @@ const highlightNewLineRenderer = (handsontable: Handsontable, td, row, col, prop
     }
 
     // 上記以外の背景色の設定
-    //   - 片方だけ空 => 薄い黄色 (#ffffcc)
-    //   - 両方空 or 両方空でない => 背景色なし（白）
+    // - 片方だけ空 => 薄い黄色 (#FFFFCC)
     if (exactlyOneEmpty) {
         td.style.backgroundColor = "#FFFFCC"
     }
@@ -70,17 +70,17 @@ Handsontable.renderers.registerRenderer("highlightNewLineRenderer", highlightNew
 type QrCodeListProps = {
     options: Options
     setOptions: Dispatch<SetStateAction<Options>>
-    data: string[][]
-    setData: Dispatch<SetStateAction<string[][]>>
 }
 
 const QrCodeList = (props: QrCodeListProps) => {
 
     const {
-        options,
+        options
+    } = props
+    const {
         data,
         setData
-    } = props
+    } = useData()
 
     return <>
         <QrCodeListHandsontable
@@ -101,13 +101,8 @@ const QrCodeList = (props: QrCodeListProps) => {
             display: "flex",
             gap: "8px"
         }}>
-            <QrCodeListExportCsvButton
-                data={data}
-            />
-            <QrCodeListExportPngButton
-                data={data}
-                options={options}
-            />
+            <QrCodeListExportCsvButton data={data ?? [["", ""]]} />
+            <QrCodeListExportPngButton options={options} />
         </div>
     </>
 }

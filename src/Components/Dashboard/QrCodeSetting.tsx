@@ -23,7 +23,6 @@ const QrCodeSetting: FC<QrGenerateProps> = (props: QrGenerateProps): ReactElemen
 
     const [image, setImage] = useState<string>()
 
-
     return <>
         <div className="d-flex" style={{
             maxWidth: "880px"

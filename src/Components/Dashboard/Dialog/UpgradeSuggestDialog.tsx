@@ -37,7 +37,7 @@ const UpgradeSuggestDialog: FC<UpgradeSuggestDialogProps> = (props: UpgradeSugge
                 <div className="text-center">
                     <div className="m-2">
                         <img
-                            src="/public/logo.png"
+                            src="/logo.png"
                             alt="QR Mate"
                             style={{
                                 width: "100%"

@@ -4,22 +4,21 @@ import { ChangeEvent, Dispatch, FC, ReactElement, SetStateAction, useEffect, use
 import { Button, Card, Spinner } from "react-bootstrap"
 import jsQR, { QRCode } from "jsqr"
 import { Options } from "qr-code-styling"
+import { useData } from "../../Provider/DataProvider.tsx"
 
 type QrCodeReadingProps = {
     options: Options
     setOptions: Dispatch<SetStateAction<Options>>
-    data: string[][]
-    setData: Dispatch<SetStateAction<string[][]>>
 }
 
 // 何としても初回のみ実行するためのフラグ
 let initialize: boolean = false
 
-const QrCodeReading: FC<QrCodeReadingProps> = (props: QrCodeReadingProps): ReactElement => {
+const QrCodeReading: FC<QrCodeReadingProps> = (_: QrCodeReadingProps): ReactElement => {
 
     const {
         setData
-    } = props
+    } = useData()
 
     const [isLoading, setIsLoading] = useState(false)
     const [qrCodeData, setQrCodeData] = useState<string[][]>([])
