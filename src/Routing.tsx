@@ -6,10 +6,11 @@ import { FC, ReactElement, Suspense, useEffect, useState } from "react"
 import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom"
 import "bootstrap"
 
-import Loading from "./Components/Loading.tsx"
 import Dashboard from "./Components/Dashboard/Index.tsx"
-import { ToastProvider } from "./Provider/ToastProvider.tsx"
+import Loading from "./Components/Loading.tsx"
 import SideBar from "./Components/SideBar.tsx"
+import { DataProvider } from "./Provider/DataProvider.tsx"
+import { ToastProvider } from "./Provider/ToastProvider.tsx"
 
 const Routing: FC = (): ReactElement => {
 
@@ -78,10 +79,12 @@ const Routing: FC = (): ReactElement => {
             Component(): ReactElement {
                 return <>
                     <ToastProvider>
-                        <SideBar theme={theme} />
-                        <main className="main" data-bs-theme={theme}>
-                            <Outlet />
-                        </main>
+                        <DataProvider>
+                            <SideBar theme={theme} />
+                            <main className="main" data-bs-theme={theme}>
+                                <Outlet />
+                            </main>
+                        </DataProvider>
                     </ToastProvider>
                 </>
             },

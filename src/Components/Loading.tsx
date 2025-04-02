@@ -1,10 +1,11 @@
 import { Theme } from "@tauri-apps/api/window"
+import { FC, ReactElement } from "react"
 
 interface LoadingProps {
     theme?: Theme | undefined
 }
 
-const Loading = (props: LoadingProps) => {
+const Loading: FC<LoadingProps> = (props: LoadingProps): ReactElement => {
 
     const { theme } = props
 

@@ -128,8 +128,7 @@ const QrCodeListHandsontable: FC<QrCodeListHandsontableProps> = (props: QrCodeLi
     }, [data])
 
     return <>
-        <div ref={handsontableRef} style={style}>
-        </div>
+        <div ref={handsontableRef} style={style}></div>
     </>
 }
 

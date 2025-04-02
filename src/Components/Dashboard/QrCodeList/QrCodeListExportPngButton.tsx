@@ -3,21 +3,21 @@ import { FC, ReactElement, useState } from "react"
 import { pictureDir } from "@tauri-apps/api/path"
 import { open } from "@tauri-apps/plugin-dialog"
 
-import ErrorDialog, { ErrorDialogRecord } from "../Dialog/ErrorDialog.tsx"
 import QrCodeExportDialog from "../Dialog/QrCodeExportDialog.tsx"
+import { useData } from "../../../Provider/DataProvider.tsx"
+import ErrorDialog, { ErrorDialogRecord } from "../Dialog/ErrorDialog.tsx"
 import QrCodeData from "../../../Types/QrCodeData.ts"
 
 type QrCodeListExportPngButtonProps = {
-    data: string[][]
     options: Options
 }
 
 const QrCodeListExportPngButton: FC<QrCodeListExportPngButtonProps> = (props: QrCodeListExportPngButtonProps): ReactElement => {
 
+    const { options } = props
     const {
-        data,
-        options
-    } = props
+        data
+    } = useData()
 
     const [isErrorDialogShow, setIsErrorDialogShow] = useState<boolean>(false)
     const [isQrCodeExportDialogShow, setIsQrCodeExportDialogShow] = useState<boolean>(false)
