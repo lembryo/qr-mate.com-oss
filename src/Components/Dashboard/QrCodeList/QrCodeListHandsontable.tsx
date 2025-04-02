@@ -1,19 +1,19 @@
-import { CSSProperties, Dispatch, FC, ReactElement, SetStateAction, useEffect, useRef, useState } from "react"
+import { CSSProperties, FC, ReactElement, useEffect, useRef, useState } from "react"
 import Handsontable from "handsontable"
 
+import { useData } from "../../../Provider/DataProvider.tsx"
+
 type QrCodeListHandsontableProps = {
-    data: string[][]
-    setData: Dispatch<SetStateAction<string[][]>>
     style: CSSProperties
 }
 
 const QrCodeListHandsontable: FC<QrCodeListHandsontableProps> = (props: QrCodeListHandsontableProps): ReactElement => {
 
+    const { style } = props
     const {
         data,
-        setData,
-        style
-    } = props
+        setData
+    } = useData()
 
     const [handsontable, setHandsontable] = useState<Handsontable | null>(null)
 

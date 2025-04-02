@@ -6,7 +6,6 @@ import { Options } from "qr-code-styling"
 import QrCodeListExportPngButton from "./QrCodeList/QrCodeListExportPngButton.tsx"
 import QrCodeListExportCsvButton from "./QrCodeList/QrCodeListExportCsvButton.tsx"
 import QrCodeListHandsontable from "./QrCodeList/QrCodeListHandsontable.tsx"
-import { useData } from "../../Provider/DataProvider.tsx"
 
 // @ts-ignore
 const highlightNewLineRenderer = (handsontable: Handsontable, td, row, col, prop, value, cellProperties): void => {
@@ -77,15 +76,9 @@ const QrCodeList = (props: QrCodeListProps) => {
     const {
         options
     } = props
-    const {
-        data,
-        setData
-    } = useData()
 
     return <>
         <QrCodeListHandsontable
-            data={data}
-            setData={setData}
             style={{
                 width: "100vw",
                 height: "calc(100vh - 100px)",
@@ -101,7 +94,7 @@ const QrCodeList = (props: QrCodeListProps) => {
             display: "flex",
             gap: "8px"
         }}>
-            <QrCodeListExportCsvButton data={data ?? [["", ""]]} />
+            <QrCodeListExportCsvButton />
             <QrCodeListExportPngButton options={options} />
         </div>
     </>
