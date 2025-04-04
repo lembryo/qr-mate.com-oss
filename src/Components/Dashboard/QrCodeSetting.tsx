@@ -7,10 +7,9 @@ import QrCodeSettingOptions from "./QrCodeSetting/QrCodeSettingOptions.tsx"
 
 
 type QrGenerateProps = {
+    activeTab: string
     options: Options
     setOptions: Dispatch<SetStateAction<Options>>
-    data: string[][]
-    setData: Dispatch<SetStateAction<string[][]>>
 }
 
 const QrCodeSetting: FC<QrGenerateProps> = (props: QrGenerateProps): ReactElement => {

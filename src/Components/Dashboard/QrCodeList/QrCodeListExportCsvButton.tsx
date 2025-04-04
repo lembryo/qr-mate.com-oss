@@ -3,15 +3,11 @@ import { save } from "@tauri-apps/plugin-dialog"
 import { writeFile } from "@tauri-apps/plugin-fs"
 
 import { useToast } from "../../../Provider/ToastProvider.tsx"
+import { useData } from "../../../Provider/DataProvider.tsx"
 
-type QrCodeListCsvExportButtonProps = {
-    data: string[][]
-}
+const QrCodeListExportCsvButton = () => {
 
-const QrCodeListExportCsvButton = (props: QrCodeListCsvExportButtonProps) => {
-
-    const { data } = props
-
+    const { data } = useData()
     const toast = useToast()
 
     const csv = (): void => {
