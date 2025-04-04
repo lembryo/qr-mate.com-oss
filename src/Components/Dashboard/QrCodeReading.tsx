@@ -1,9 +1,10 @@
 import { listen } from "@tauri-apps/api/event"
 import { readFile } from "@tauri-apps/plugin-fs"
-import { ChangeEvent, Dispatch, FC, ReactElement, SetStateAction, useEffect, useRef, useState } from "react"
+import { ChangeEvent, Dispatch, FC, ReactElement, RefObject, SetStateAction, useEffect, useRef, useState } from "react"
 import { Button, Card, Spinner } from "react-bootstrap"
 import jsQR, { QRCode } from "jsqr"
 import { Options } from "qr-code-styling"
+
 import { useData } from "../../Provider/DataProvider.tsx"
 
 type QrCodeReadingProps = {
@@ -12,22 +13,18 @@ type QrCodeReadingProps = {
     setOptions: Dispatch<SetStateAction<Options>>
 }
 
-// 何としても初回のみ実行するためのフラグ
-let initialize: boolean = false
+const QrCodeReading: FC<QrCodeReadingProps> = (props: QrCodeReadingProps): ReactElement => {
 
-const QrCodeReading: FC<QrCodeReadingProps> = (_: QrCodeReadingProps): ReactElement => {
-
-    const {
-        setData
-    } = useData()
+    const { setData } = useData()
+    const { activeTab } = props
 
     const [isLoading, setIsLoading] = useState(false)
     const [qrCodeData, setQrCodeData] = useState<string[][]>([])
 
-    const ref = useRef<HTMLInputElement>(null)
+    const ref: RefObject<HTMLInputElement | null> = useRef<HTMLInputElement>(null)
 
     useEffect((): void => {
-        if (!initialize) {
+        if (activeTab === "qr-code-reading") {
             // Tauri v2 はブラウザ標準のドラッグ＆ドロップを使えないので Tauri v2 のAPIを使う
             listen("tauri://drag-drop", (event: any): void => {
                 const paths: string[] = (event.payload as {
@@ -73,13 +70,29 @@ const QrCodeReading: FC<QrCodeReadingProps> = (_: QrCodeReadingProps): ReactElem
             })
                 .then((): void => {
                 })
+        } else {
+            // タブが非アクティブになったら、イベントリスナーを解除
+            listen("tauri://drag-drop", (): void => {
+                // イベントリスナーを解除
+            })
+                .then((): void => {
+                })
         }
-        initialize = true
-    }, [])
+    }, [activeTab])
 
     useEffect((): void => {
         setData((data: string[][]): string[][] => {
-            return [...data, ...qrCodeData]
+            const combined: string[][] = [...data, ...qrCodeData]
+            const uniqueRows: string[][] = []
+            const seen = new Set<string>()
+            for (const row of combined) {
+                const key: string = row[1]
+                if (!seen.has(key)) {
+                    seen.add(key)
+                    uniqueRows.push(row)
+                }
+            }
+            return uniqueRows
         })
     }, [qrCodeData])
 
@@ -214,32 +227,37 @@ const QrCodeReading: FC<QrCodeReadingProps> = (_: QrCodeReadingProps): ReactElem
             </Card>
         </div>
 
-        <div className="text-center m-2">
-            <Button
-                variant="outline-secondary"
-                onClick={(): void => {
-                    setQrCodeData([])
-                }}
-                className="mb-3"
-                disabled={qrCodeData.length === 0}
-            >
-                結果をクリア
-            </Button>
-        </div>
-
-        <div className="text-center">
-            <h5>読み取り結果:</h5>
-            {
-                qrCodeData.length === 0 ? <>
-                    <div>まだ読み取っていません。</div>
-                </> : <>
-                    <div>
+        <div className="container-fluid">
+            <div className="row">
+                <div className="col-6">
+                    <div className="text-center m-2">
+                        <Button
+                            variant="outline-secondary"
+                            onClick={(): void => {
+                                setQrCodeData([])
+                            }}
+                            className="mb-2"
+                            disabled={qrCodeData.length === 0}
+                        >
+                            結果をクリア
+                        </Button>
+                    </div>
+                    <div className="text-center">
+                        <h5>読み取り結果:</h5>
                         {
-                            `${qrCodeData.length.toLocaleString()} 件のQRコードを読み取りました。`
+                            qrCodeData.length === 0 ? <>
+                                <div>まだ読み取っていません。</div>
+                            </> : <>
+                                <div>
+                                    {
+                                        `${qrCodeData.length.toLocaleString()} 件のQRコードを読み取りました。`
+                                    }
+                                </div>
+                            </>
                         }
                     </div>
-                </>
-            }
+                </div>
+            </div>
         </div>
     </>
 }

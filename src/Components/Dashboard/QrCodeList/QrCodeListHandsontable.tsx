@@ -20,13 +20,12 @@ const QrCodeListHandsontable: FC<QrCodeListHandsontableProps> = (props: QrCodeLi
     const handsontableRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
-        let handsontable: Handsontable | null = null
-        if (handsontableRef.current) {
-            handsontable = new Handsontable(handsontableRef.current, {
+        if (handsontableRef.current && !handsontable) {
+            const instance: Handsontable = new Handsontable(handsontableRef.current, {
                 afterChange(changes, source) {
                     if (changes && source !== "loadData") {
                         // 変更後のデータを取得し、Reactのstateを更新
-                        const data = handsontable?.getData() || []
+                        const data = instance?.getData() || []
                         setData(data)
                     }
                 },
@@ -35,22 +34,22 @@ const QrCodeListHandsontable: FC<QrCodeListHandsontableProps> = (props: QrCodeLi
                     // Enterキーでない場合は無視
                     if (e.key !== "Enter") return
 
-                    const selection = handsontable?.getSelected()
+                    const selection = instance.getSelected()
                     if (!selection) return
 
                     // selection[0] は [startRow, startCol, endRow, endCol]
                     const [startRow, startCol] = selection[0]
 
-                    const totalRows = handsontable?.countRows() || 0
+                    const totalRows = instance.countRows() || 0
 
                     // 「最終行」かをチェック
                     if (startRow === totalRows - 1) {
                         // 新しい行を末尾に追加
-                        handsontable?.alter("insert_row", totalRows)
+                        instance.alter("insert_row", totalRows)
 
                         // 追加後、行数が1増えたので「totalRows」行目が新しい行
                         // フォーカスは "startCol"（もともとのカラム位置）へ移す
-                        handsontable?.selectCell(totalRows, startCol)
+                        instance.selectCell(totalRows, startCol)
                     }
                 },
                 autoColumnSize: true,
@@ -113,19 +112,17 @@ const QrCodeListHandsontable: FC<QrCodeListHandsontableProps> = (props: QrCodeLi
                 width: "100%",
                 wordWrap: false
             })
-            setHandsontable(handsontable)
-        }
-
-        return (): void => {
-            handsontable?.destroy()
+            setHandsontable(instance)
         }
     }, [])
 
     useEffect((): void => {
-        if (data.length > 0) {
-            handsontable?.loadData(data)
+        if (data.length > 0 && handsontable) {
+            handsontable.loadData([
+                ...data
+            ])
         }
-    }, [data])
+    }, [handsontable, data])
 
     return <>
         <div ref={handsontableRef} style={style}></div>
