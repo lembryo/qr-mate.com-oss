@@ -67,6 +67,7 @@ const highlightNewLineRenderer = (handsontable: Handsontable, td, row, col, prop
 Handsontable.renderers.registerRenderer("highlightNewLineRenderer", highlightNewLineRenderer)
 
 type QrCodeListProps = {
+    activeTab: string
     options: Options
     setOptions: Dispatch<SetStateAction<Options>>
 }
