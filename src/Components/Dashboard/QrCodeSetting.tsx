@@ -7,6 +7,7 @@ import QrCodeSettingOptions from "./QrCodeSetting/QrCodeSettingOptions.tsx"
 
 
 type QrGenerateProps = {
+    activeTab: string
     options: Options
     setOptions: Dispatch<SetStateAction<Options>>
 }

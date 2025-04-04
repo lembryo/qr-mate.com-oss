@@ -7,6 +7,7 @@ import { Options } from "qr-code-styling"
 import { useData } from "../../Provider/DataProvider.tsx"
 
 type QrCodeReadingProps = {
+    activeTab: string
     options: Options
     setOptions: Dispatch<SetStateAction<Options>>
 }
