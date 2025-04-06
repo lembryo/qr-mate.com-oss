@@ -117,7 +117,7 @@ const QrCodeListHandsontable: FC<QrCodeListHandsontableProps> = (props: QrCodeLi
     }, [])
 
     useEffect((): void => {
-        if (data.length > 0 && handsontable) {
+        if (data && data.length > 0 && handsontable) {
             handsontable.loadData([
                 ...data
             ])
