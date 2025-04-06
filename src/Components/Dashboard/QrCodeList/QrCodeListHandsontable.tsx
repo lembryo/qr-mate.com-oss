@@ -64,7 +64,10 @@ const QrCodeListHandsontable: FC<QrCodeListHandsontableProps> = (props: QrCodeLi
                     cellProperties.renderer = "highlightNewLineRenderer"
                     return cellProperties
                 },
-                colHeaders: true,
+                colHeaders: [
+                    "ファイル名",
+                    "URL"
+                ],
                 colWidths: [200, window.innerWidth - 450 - 5 * 2],
                 columnSorting: true,
                 // @ts-ignore

@@ -54,6 +54,9 @@ const QrCodeReading: FC<QrCodeReadingProps> = (props: QrCodeReadingProps): React
                                             ])
                                         }
                                     })
+                                    .then((): void => {
+
+                                    })
                                     .finally((): void => {
                                         count += 1
                                         if (count === paths.length) {
@@ -82,6 +85,13 @@ const QrCodeReading: FC<QrCodeReadingProps> = (props: QrCodeReadingProps): React
 
     useEffect((): void => {
         setData((data: string[][]): string[][] => {
+            // 先頭が空っぽなら削除
+            if (data.length > 0) {
+                if (data[0][0] === "" && data[0][1] === "") {
+                    data.shift()
+                }
+            }
+            // 重複を削除（カメラから読み込む際に連続して読み込まれるため）
             const combined: string[][] = [...data, ...qrCodeData]
             const uniqueRows: string[][] = []
             const seen = new Set<string>()
