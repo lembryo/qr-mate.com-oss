@@ -60,11 +60,11 @@ const QrCodeExportDialog: FC<QrExportDialogProps> = (props: QrExportDialogProps)
             }
             const styling: QRCodeStyling = new QRCodeStyling(data)
             styling.getRawData("png")
-                .then((blob: Blob | null): void => {
+                .then((blob: Blob | Buffer<ArrayBufferLike> | null): void => {
                     if (!blob) {
                         return
                     }
-                    blob.arrayBuffer()
+                    "arrayBuffer" in blob && blob.arrayBuffer()
                         .then((buffer: ArrayBuffer): void => {
                             const bytes = new Uint8Array(buffer)
                             const file = `${directory}/${qrCode.filename}.png`

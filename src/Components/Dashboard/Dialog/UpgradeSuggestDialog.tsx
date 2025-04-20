@@ -113,7 +113,7 @@ const UpgradeSuggestDialog: FC<UpgradeSuggestDialogProps> = (props: UpgradeSugge
                     variant="success"
                     onClick={(): void => {
                         // 製品版ページへ誘導する
-                        open("https://qr-mate.com/upgrade")
+                        open("https://qr-mate.com/pro")
                             .then((): void => {
                             })
                     }}
