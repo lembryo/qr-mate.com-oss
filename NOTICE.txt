@@ -1,0 +1,2 @@
+本アプリの全てのOSSライセンス詳細は、同梱の THIRD_PARTY_LICENSES.txt をご覧ください。
+For all open source license and copyright information, see THIRD_PARTY_LICENSES.txt.
