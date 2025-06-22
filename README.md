@@ -82,6 +82,35 @@ npm run tauri build
 このプロジェクトは **MITライセンス** のもとで公開されています。  
 自由に利用・複製・改変・再配布いただけます。
 
+### ▼ サードパーティライブラリ・OSSに関するご注意
+
+本アプリには以下の種類のOSSライブラリ・フォント・アイコンが含まれます：
+
+- MITライセンス、Apache License 2.0、BSD系、ISC等：  
+  → いずれもMITライセンスとの互換性がありますが、各OSS本来のライセンス条件（著作権表示やライセンス条項の同梱義務など）を遵守しています。  
+  一部OSSの**著作権表示・ライセンス文書**は `THIRD_PARTY_LICENSES.txt` として同梱しています。
+
+- **Font Awesome Free** のフォント（OFL 1.1）、アイコン（CC BY 4.0）：
+    - フォントファイル部分は [SIL Open Font License 1.1（OFL 1.1）](https://scripts.sil.org/OFL) に準拠し、MITライセンスでの再配布はできません。  
+      → **本アプリに含まれるフォントファイルはOFL 1.1のもとで再配布されます。**
+    - アイコン（SVG/JS形式）は [Creative Commons Attribution 4.0 International（CC BY 4.0）](https://creativecommons.org/licenses/by/4.0/) で配布され、著作権表示が必要です。  
+      → 本アプリには必要な著作権表示を行っています。
+
+- **ブランドアイコン**について：  
+  Font Awesomeのブランドアイコンは各社の商標です。ブランドやサービスを示す用途以外での利用はできません。
+
+- **Apache License 2.0** 採用のライブラリについて：  
+  著作権表示やライセンス条項を、`THIRD_PARTY_LICENSES.txt` にまとめて同梱しています。
+
+**本アプリに含まれる全てのOSSライブラリのライセンス詳細・著作権表示は `THIRD_PARTY_LICENSES.txt` をご確認ください。**
+
+---
+
+### ▼ クレジット・著作権表示例
+
+- Font Awesome Free by [Fonticons, Inc.](https://fontawesome.com), licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)（アイコン/SVG, JS形式）および [SIL OFL 1.1](https://scripts.sil.org/OFL)（フォント）
+- 一部OSSライブラリは MIT, Apache-2.0, BSD系等でライセンスされています。詳細は同梱の `THIRD_PARTY_LICENSES.txt` を参照してください。
+
 ---
 
 ## 🙋 製品版 / 権利譲渡のお問い合わせ
