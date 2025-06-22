@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "QR Mate OSS"
-#define MyAppVersion "1.0.1"
+#define MyAppVersion "1.0.2"
 #define MyAppPublisher "mao <mao.lembryo@gmail.com>"
 #define MyAppURL "https://qr-mate.com/"
 #define MyAppExeName "QR_Mate_OSS.exe"
@@ -38,6 +38,8 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 
 [Files]
 Source: "target\release\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "licenses\*"; DestDir: "{app}\licenses\npm"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\licenses\*"; DestDir: "{app}\licenses\cargo"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
