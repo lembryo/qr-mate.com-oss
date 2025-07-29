@@ -206,7 +206,7 @@ const QrCodeReading: FC<QrCodeReadingProps> = (props: QrCodeReadingProps): React
                 }}
                 style={{
                     cursor: "pointer",
-                    border: "2px dashed #aaa"
+                    border: "2px dashed #cbd5e0"
                 }}
             >
                 <input

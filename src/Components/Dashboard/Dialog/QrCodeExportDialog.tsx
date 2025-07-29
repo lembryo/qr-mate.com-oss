@@ -60,7 +60,7 @@ const QrCodeExportDialog: FC<QrExportDialogProps> = (props: QrExportDialogProps)
             }
             const styling: QRCodeStyling = new QRCodeStyling(data)
             styling.getRawData("png")
-                .then((blob: Blob | Buffer<ArrayBufferLike> | null): void => {
+                .then((blob: Blob | null): void => {
                     if (!blob) {
                         return
                     }

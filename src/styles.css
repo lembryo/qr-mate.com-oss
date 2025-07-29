@@ -23,25 +23,26 @@ button {
     transition: all .35s ease-in-out;
 }
 
+/* プライマリボタン - アクセントブルーに更新 */
 .btn-outline-primary {
-    color: #6C757D !important;
-    border-color: #6C757D !important;
+    color: #3182ce !important;
+    border-color: #3182ce !important;
     background-color: transparent !important;
     transition: all 0.2s ease-in-out;
 }
 
 .btn-outline-primary:hover {
     color: #FFFFFF !important;
-    background-color: #6C757D !important;
-    border-color: #6C757D !important;
+    background-color: #3182ce !important;
+    border-color: #3182ce !important;
 }
 
 .btn-outline-primary:active,
 .btn-outline-primary:focus {
     color: #FFFFFF !important;
-    background-color: #343A40 !important;
-    border-color: #343A40 !important;
-    box-shadow: 0 0 0 0.2rem rgba(108, 117, 125, 0.5) !important;
+    background-color: #2d3748 !important;
+    border-color: #2d3748 !important;
+    box-shadow: 0 0 0 0.2rem rgba(49, 130, 206, 0.5) !important;
 }
 
 .nav ul {
@@ -63,35 +64,38 @@ button {
     padding: 15px 0;
 }
 
+/* ナビゲーションホバー効果 - セカンダリグレーに更新 */
 .nav a:hover {
-    background: rgba(var(--bs-secondary-rgb), 0.5);
+    background: rgba(74, 85, 104, 0.5);
     opacity: 1;
 }
 
+/* タブ - セカンダリグレーに更新 */
 .nav-tabs {
-    border-bottom: 1px solid #6C757D;
+    border-bottom: 1px solid #cbd5e0;
 }
 
 .nav-tabs .nav-link {
-    color: #6C757D;
+    color: #4a5568;
     border: 1px solid transparent;
     background-color: transparent;
     transition: all 0.2s ease-in-out;
 }
 
 .nav-tabs .nav-link:hover {
-    color: #343A40;
-    border-color: #6C757D;
+    color: #2d3748;
+    border-color: #cbd5e0;
 }
 
 .nav-tabs .nav-link.active {
     color: #FFFFFF;
-    background-color: #6C757D;
-    border-color: #6C757D;
+    background-color: #3182ce;
+    border-color: #3182ce;
 }
 
+/* 境界線 - ボーダーグレーに更新 */
 .border-primary {
-    border-color: #6C757D !important;
+    border-color: #cbd5e0 !important;
 }
 
 .position-absolute {
@@ -110,4 +114,93 @@ button {
 .qr-canvas {
     width: 256px;
     height: 256px;
+}
+
+/* カスタムBootstrap変数のオーバーライド */
+:root {
+    --bs-primary: #3182ce;
+    --bs-primary-rgb: 49, 130, 206;
+    --bs-secondary: #4a5568;
+    --bs-secondary-rgb: 74, 85, 104;
+    --bs-success: #38a169;
+    --bs-success-rgb: 56, 161, 105;
+    --bs-danger: #e53e3e;
+    --bs-danger-rgb: 229, 62, 62;
+    --bs-warning: #ed8936;
+    --bs-warning-rgb: 237, 137, 54;
+    --bs-info: #3182ce;
+    --bs-info-rgb: 49, 130, 206;
+    --bs-light: #e2e8f0;
+    --bs-light-rgb: 226, 232, 240;
+    --bs-dark: #2d3748;
+    --bs-dark-rgb: 45, 55, 72;
+    --bs-gray: #718096;
+    --bs-gray-rgb: 113, 128, 150;
+    --bs-border-color: #cbd5e0;
+    --bs-border-color-translucent: rgba(203, 213, 224, 0.175);
+}
+
+/* フォーム要素のスタイル更新 */
+.form-control {
+    border-color: #cbd5e0;
+}
+
+.form-control:focus {
+    border-color: #3182ce;
+    box-shadow: 0 0 0 0.2rem rgba(49, 130, 206, 0.25);
+}
+
+/* ダークモード対応 */
+[data-bs-theme="dark"] {
+    --bs-body-bg: #1a202c;
+    --bs-body-color: #f7fafc;
+    --bs-primary: #4299e1;
+    --bs-secondary: #718096;
+    --bs-border-color: #4a5568;
+}
+
+[data-bs-theme="dark"] .sidebar {
+    background-color: #2d3748;
+    border-right: 1px solid #4a5568;
+}
+
+[data-bs-theme="dark"] .nav-tabs {
+    border-bottom-color: #4a5568;
+}
+
+[data-bs-theme="dark"] .nav-tabs .nav-link {
+    color: #a0aec0;
+}
+
+[data-bs-theme="dark"] .nav-tabs .nav-link:hover {
+    color: #f7fafc;
+    border-color: #4a5568;
+}
+
+[data-bs-theme="dark"] .nav-tabs .nav-link.active {
+    background-color: #4299e1;
+    border-color: #4299e1;
+}
+
+[data-bs-theme="dark"] .form-control {
+    background-color: #2d3748;
+    border-color: #4a5568;
+    color: #f7fafc;
+}
+
+[data-bs-theme="dark"] .form-control:focus {
+    border-color: #4299e1;
+    box-shadow: 0 0 0 0.2rem rgba(66, 153, 225, 0.25);
+}
+
+/* カード要素 */
+.card {
+    border-color: #cbd5e0;
+    box-shadow: 0px 2px 6px rgba(26, 32, 44, 0.08);
+}
+
+[data-bs-theme="dark"] .card {
+    background-color: #2d3748;
+    border-color: #4a5568;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.3);
 }
