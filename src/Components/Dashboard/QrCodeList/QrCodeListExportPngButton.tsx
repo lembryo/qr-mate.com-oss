@@ -40,7 +40,7 @@ const QrCodeListExportPngButton: FC<QrCodeListExportPngButtonProps> = (props: Qr
                 errors.push({
                     text: `${(index + 1).toLocaleString()} 行目のURLが空です`,
                     style: {
-                        backgroundColor: "#FFFFCC"
+                        backgroundColor: "#faf089"
                     }
                 })
                 return
@@ -50,7 +50,7 @@ const QrCodeListExportPngButton: FC<QrCodeListExportPngButtonProps> = (props: Qr
                 errors.push({
                     text: `${(index + 1).toLocaleString()} 行目のファイル名が空です`,
                     style: {
-                        backgroundColor: "#FFFFCC"
+                        backgroundColor: "#faf089"
                     }
                 })
                 return
@@ -62,7 +62,7 @@ const QrCodeListExportPngButton: FC<QrCodeListExportPngButtonProps> = (props: Qr
                     errors.push({
                         text: `${(index + 1).toLocaleString()} 行目のURLが不正です`,
                         style: {
-                            backgroundColor: "#FFCCCC"
+                            backgroundColor: "#fbb6b6"
                         }
                     })
                     return
@@ -75,7 +75,7 @@ const QrCodeListExportPngButton: FC<QrCodeListExportPngButtonProps> = (props: Qr
                     errors.push({
                         text: `${(index + 1).toLocaleString()} 行目のファイル名が不正です`,
                         style: {
-                            backgroundColor: "#FFCCCC"
+                            backgroundColor: "#fbb6b6"
                         }
                     })
                     return
@@ -89,7 +89,7 @@ const QrCodeListExportPngButton: FC<QrCodeListExportPngButtonProps> = (props: Qr
                 errors.push({
                     text: `${(index + 1).toLocaleString()} 行目のファイル名が重複しています`,
                     style: {
-                        backgroundColor: "#FFCCCC"
+                        backgroundColor: "#fbb6b6"
                     }
                 })
                 return

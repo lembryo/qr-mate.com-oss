@@ -36,7 +36,7 @@ const highlightNewLineRenderer = (handsontable: Handsontable, td, row, col, prop
         const forbiddenPattern = /[\\/:*?"<>|\r\n]/
         if (forbiddenPattern.test(value)) {
             // 薄い赤にする
-            td.style.backgroundColor = "#FFCCCC"
+            td.style.backgroundColor = "#fbb6b6"
         } else {
             // 問題なければクリア
             td.style.backgroundColor = ""
@@ -48,17 +48,17 @@ const highlightNewLineRenderer = (handsontable: Handsontable, td, row, col, prop
         // 簡易的なURL判定の例: プロトコル＋://＋何か文字列
         const urlPattern = /^https?:\/\/.+/i
         if (!urlPattern.test(value) && value.length > 0) {
-            // 薄い黄色にする
-            td.style.backgroundColor = "#FFCCCC"
+            // 薄い赤にする
+            td.style.backgroundColor = "#fbb6b6"
         } else {
             td.style.backgroundColor = ""
         }
     }
 
     // 上記以外の背景色の設定
-    // - 片方だけ空 => 薄い黄色 (#FFFFCC)
+    // - 片方だけ空 => 薄い黄色 (#faf089)
     if (exactlyOneEmpty) {
-        td.style.backgroundColor = "#FFFFCC"
+        td.style.backgroundColor = "#faf089"
     }
 }
 
